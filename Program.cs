@@ -1,5 +1,6 @@
 ﻿
 using TallerMantenimiento.Models;
+using TallerMantenimiento.Services;
 
 List<Cliente> clientes = new();
 int siguienteId = 1;
@@ -22,7 +23,7 @@ while (true)
             return;
 
         default:
-            Console.WriteLine("\nOpción no válida.");
+            Console.WriteLine("\nOpción no válida. Intente nuevamente.");
             break;
     }
 
@@ -52,12 +53,14 @@ static void RegistrarCliente(List<Cliente> clientes, ref int siguienteId)
 
     string nombre = SolicitarNombre();
     string telefono = SolicitarTelefono();
+    string servicio = SeleccionarServicio();
 
     Cliente cliente = new Cliente
     {
         Id = siguienteId++,
         Nombre = nombre,
-        Telefono = telefono
+        Telefono = telefono,
+        Servicio = servicio
     };
 
     clientes.Add(cliente);
@@ -75,7 +78,9 @@ static string SolicitarNombre()
         string nombre = (Console.ReadLine() ?? "").Trim();
 
         if (!string.IsNullOrWhiteSpace(nombre))
+        {
             return nombre;
+        }
 
         Console.WriteLine("\nEl nombre es obligatorio.\n");
     }
@@ -98,6 +103,33 @@ static string SolicitarTelefono()
     }
 }
 
+static string SeleccionarServicio()
+{
+    while (true)
+    {
+        CatalogoServicios.MostrarServicios();
+
+        Console.Write("\nSeleccione el número del servicio: ");
+
+        if (!int.TryParse(Console.ReadLine(), out int opcion))
+        {
+            Console.WriteLine(
+                "\nDebe introducir un número válido. Intente nuevamente.");
+            continue;
+        }
+
+        string? servicio = CatalogoServicios.ObtenerServicio(opcion);
+
+        if (servicio == null)
+        {
+            Console.WriteLine("\nEl servicio no existe. Intente nuevamente.");
+            continue;
+        }
+
+        return servicio;
+    }
+}
+
 static void MostrarFichaCliente(Cliente cliente)
 {
     Console.WriteLine();
@@ -107,5 +139,6 @@ static void MostrarFichaCliente(Cliente cliente)
     Console.WriteLine($"  ID:        {cliente.Id:D3}");
     Console.WriteLine($"  Nombre:    {cliente.Nombre}");
     Console.WriteLine($"  Teléfono:  {cliente.Telefono}");
+    Console.WriteLine($"  Servicio:  {cliente.Servicio}");
     Console.WriteLine("----------------------------------------");
 }
