@@ -22,6 +22,10 @@ while (true)
             ConsultarClientes(clientes);
             break;
 
+        case "3":
+            ActualizarCliente(clientes);
+            break;
+
         case "0":
             Console.WriteLine("\nSaliendo del sistema...");
             return;
@@ -45,6 +49,7 @@ static void MostrarMenu()
     Console.WriteLine();
     Console.WriteLine("  [1] Registrar cliente");
     Console.WriteLine("  [2] Consultar clientes");
+    Console.WriteLine("  [3] Actualizar cliente");
     Console.WriteLine("  [0] Salir");
     Console.WriteLine();
     Console.WriteLine("---------------------------------------");
@@ -90,7 +95,7 @@ static string SolicitarNombre()
         }
 
         Console.WriteLine(
-            "\nNombre inválido. Solo se permiten letras y espacios.\n");
+            "\nNombre inválido. Solo se permiten letras, espacios, guiones y apóstrofes.\n");
     }
 }
 
@@ -171,4 +176,74 @@ static void MostrarFichaCliente(Cliente cliente)
     Console.WriteLine($"  Teléfono:  {cliente.Telefono}");
     Console.WriteLine($"  Servicio:  {cliente.Servicio}");
     Console.WriteLine("----------------------------------------");
+}
+
+static void ActualizarCliente(List<Cliente> clientes)
+{
+    Console.Clear();
+    Console.WriteLine("=== ACTUALIZAR CLIENTE ===\n");
+
+    if (clientes.Count == 0)
+    {
+        Console.WriteLine("No hay clientes registrados.");
+        return;
+    }
+
+    Console.Write("Ingrese el ID del cliente: ");
+
+    if (!int.TryParse(Console.ReadLine(), out int id))
+    {
+        Console.WriteLine("\nDebe introducir un ID válido.");
+        return;
+    }
+
+    Cliente? cliente = clientes.Find(c => c.Id == id);
+
+    if (cliente == null)
+    {
+        Console.WriteLine("\nNo se encontró un cliente con ese ID.");
+        return;
+    }
+
+    MostrarFichaCliente(cliente);
+
+    while (true)
+    {
+        Console.WriteLine("\n¿Qué desea modificar?");
+        Console.WriteLine("1. Nombre");
+        Console.WriteLine("2. Teléfono");
+        Console.WriteLine("3. Servicio solicitado");
+        Console.WriteLine("0. Cancelar");
+        Console.Write("\nSeleccione una opción: ");
+
+        string? opcion = Console.ReadLine();
+
+        switch (opcion)
+        {
+            case "1":
+                cliente.Nombre = SolicitarNombre();
+                break;
+
+            case "2":
+                cliente.Telefono = SolicitarTelefono();
+                break;
+
+            case "3":
+                cliente.Servicio = SeleccionarServicio();
+                break;
+
+            case "0":
+                Console.WriteLine("\nActualización cancelada.");
+                return;
+
+            default:
+                Console.WriteLine("\nOpción no válida. Intente nuevamente.");
+                continue;
+        }
+
+        Console.Clear();
+        Console.WriteLine("¡CLIENTE ACTUALIZADO CORRECTAMENTE!");
+        MostrarFichaCliente(cliente);
+        return;
+    }
 }
