@@ -18,6 +18,10 @@ while (true)
             RegistrarCliente(clientes, ref siguienteId);
             break;
 
+        case "2":
+            ConsultarClientes(clientes);
+            break;
+
         case "0":
             Console.WriteLine("\nSaliendo del sistema...");
             return;
@@ -33,13 +37,14 @@ while (true)
 
 static void MostrarMenu()
 {
-    Console.WriteLine("========================================");
+    Console.WriteLine("=======================================");
     Console.WriteLine("       TALLER DE MANTENIMIENTO");
-    Console.WriteLine("========================================");
+    Console.WriteLine("=======================================");
     Console.WriteLine();
     Console.WriteLine("             MENÚ PRINCIPAL");
     Console.WriteLine();
     Console.WriteLine("  [1] Registrar cliente");
+    Console.WriteLine("  [2] Consultar clientes");
     Console.WriteLine("  [0] Salir");
     Console.WriteLine();
     Console.WriteLine("---------------------------------------");
@@ -77,12 +82,15 @@ static string SolicitarNombre()
         Console.Write("Nombre del cliente: ");
         string nombre = (Console.ReadLine() ?? "").Trim();
 
-        if (!string.IsNullOrWhiteSpace(nombre))
+        if (!string.IsNullOrWhiteSpace(nombre) &&
+            nombre.All(c => char.IsLetter(c) || c == ' ' || c == '-' || c == '\'') &&
+            nombre.Any(char.IsLetter))
         {
             return nombre;
         }
 
-        Console.WriteLine("\nEl nombre es obligatorio.\n");
+        Console.WriteLine(
+            "\nNombre inválido. Solo se permiten letras y espacios.\n");
     }
 }
 
@@ -127,6 +135,28 @@ static string SeleccionarServicio()
         }
 
         return servicio;
+    }
+}
+
+static void ConsultarClientes(List<Cliente> clientes)
+{
+    Console.Clear();
+
+    Console.WriteLine("========================================");
+    Console.WriteLine("         CLIENTES REGISTRADOS");
+    Console.WriteLine("========================================");
+
+    if (clientes.Count == 0)
+    {
+        Console.WriteLine("\nNo hay clientes registrados.");
+        return;
+    }
+
+    Console.WriteLine($"\nTotal de clientes: {clientes.Count}");
+
+    foreach (Cliente cliente in clientes)
+    {
+        MostrarFichaCliente(cliente);
     }
 }
 
