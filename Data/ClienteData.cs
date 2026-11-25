@@ -1,3 +1,4 @@
+
 using System.Text.Json;
 using TallerMantenimiento.Models;
 
@@ -6,8 +7,8 @@ namespace TallerMantenimiento.Data;
 public static class ClienteData
 {
     private static readonly string carpetaDatos = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "TallerMantenimiento"
+        Directory.GetCurrentDirectory(),
+        "Data"
     );
 
     private static readonly string archivoDatos = Path.Combine(
